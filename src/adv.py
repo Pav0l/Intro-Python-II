@@ -35,10 +35,31 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+
+def get_help():
+    return print('You will move througout the game with specific keys:\n  n - for North\n  s - for South\n  e - for East\n  w - for West\n  h - for Help\n  q - to Quit the game')
+
+
+def move_direction(where):
+    dir_name = ''
+    if where == 'n':
+        dir_name = 'North'
+    elif where == 's':
+        dir_name = 'South'
+    elif where == 'w':
+        dir_name = 'West'
+    elif where == 'e':
+        dir_name = 'East'
+
+    print(f'\nYou start moving {dir_name}')
+    for i in [1, 2, 3]:
+        time.sleep(0.3)
+        print('...' * i)
+
+
 #
 # Main
 #
-
 # Make a new player object that is currently in the 'outside' room.
 new_player = Player('Joe', room['outside'])
 # Write a loop that:
@@ -55,48 +76,50 @@ new_player = Player('Joe', room['outside'])
 # initial location
 directions = ''
 
+print(
+    f'\n### WELCOME {new_player.name.upper()} TO THE WORLD OF ADVENTURES! ### ')
+get_help()
+print('\n LET THE ADVENTURE BEGIN! \n')
 while directions != 'q':
-    print(f'\nYou are in the {new_player.current_room.name}')
+    print(f'\nYou move to {new_player.current_room.name}')
     print(new_player.current_room.description + '\n')
 
     directions = input(
-        'Where would you like to go next? n/w/e/s or q to quit: ').lower()
+        'What is your next move? ').lower()
     try:
 
         if directions == 'n':
             if new_player.current_room.n_to:
                 new_player.current_room = new_player.current_room.n_to
-                print('\n===== You start moving north =====')
-                time.sleep(1)
-                directions == ''
+                # print('\n===== You start moving north =====')
+                #                directions == ''
             else:
                 print('There is nothing here, try another direction.')
         elif directions == 's':
             if new_player.current_room.s_to:
                 new_player.current_room = new_player.current_room.s_to
-                print('\n===== You start moving south =====')
-                time.sleep(1)
+                move_direction(directions)
                 directions == ''
             else:
                 print('There is nothing here, try another direction.')
         elif directions == 'w':
             if new_player.current_room.w_to:
                 new_player.current_room = new_player.current_room.w_to
-                print('\n===== You start moving west =====')
-                time.sleep(1)
+                move_direction(directions)
                 directions == ''
             else:
                 print('There is nothing here, try another direction.')
         elif directions == 'e':
             if new_player.current_room.e_to:
                 new_player.current_room = new_player.current_room.e_to
-                print('\n===== You start moving east =====')
-                time.sleep(1)
+                move_direction(directions)
                 directions == ''
             else:
                 print('There is nothing here, try another direction.')
+        elif directions == 'h':
+            get_help()
         elif directions == 'q':
-            print('Thanks for playing! Hope you had fun\n')
+            print('\nThanks for playing!\n')
             break
         else:
             print('*** Wrong input ***')
