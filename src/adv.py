@@ -1,4 +1,6 @@
 from room import Room
+from player import Player
+import time
 
 # Declare all the rooms
 
@@ -38,7 +40,7 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
-
+new_player = Player('Joe', room['outside'])
 # Write a loop that:
 #
 # * Prints the current room name
@@ -49,3 +51,56 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+# initial location
+directions = ''
+
+while directions != 'q':
+    print(f'\nYou are in the {new_player.current_room.name}')
+    print(new_player.current_room.description + '\n')
+
+    directions = input(
+        'Where would you like to go next? n/w/e/s or q to quit: ').lower()
+    try:
+
+        if directions == 'n':
+            if new_player.current_room.n_to:
+                new_player.current_room = new_player.current_room.n_to
+                print('\n===== You start moving north =====')
+                time.sleep(1)
+                directions == ''
+            else:
+                print('There is nothing here, try another direction.')
+        elif directions == 's':
+            if new_player.current_room.s_to:
+                new_player.current_room = new_player.current_room.s_to
+                print('\n===== You start moving south =====')
+                time.sleep(1)
+                directions == ''
+            else:
+                print('There is nothing here, try another direction.')
+        elif directions == 'w':
+            if new_player.current_room.w_to:
+                new_player.current_room = new_player.current_room.w_to
+                print('\n===== You start moving west =====')
+                time.sleep(1)
+                directions == ''
+            else:
+                print('There is nothing here, try another direction.')
+        elif directions == 'e':
+            if new_player.current_room.e_to:
+                new_player.current_room = new_player.current_room.e_to
+                print('\n===== You start moving east =====')
+                time.sleep(1)
+                directions == ''
+            else:
+                print('There is nothing here, try another direction.')
+        elif directions == 'q':
+            print('Thanks for playing! Hope you had fun\n')
+            break
+        else:
+            print('*** Wrong input ***')
+            print('You must choose correct direction n/w/e/s or q to quit')
+
+    except:
+        print('Bad input')
