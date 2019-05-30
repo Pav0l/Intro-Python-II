@@ -4,3 +4,6 @@ class Item:
         self.attribute = attribute
         self.attribute_value = attribute_value
         self.slot = slot
+
+    def __str__(self):
+        return f'Slot: {self.slot}\nStats: + {str(self.attribute_value)} {self.attribute}'
