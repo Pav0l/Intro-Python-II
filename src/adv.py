@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from items import Item
 import time
 
 # Declare all the rooms
@@ -34,6 +35,19 @@ room['overlook'].s_to = room['foyer']
 room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
+
+# Create items
+
+items = {
+    'sword': Item('Thunderfury, Blessed Blade of the Windseeker', 'Damage', 52, 'melee'),
+    'staff': Item('Atiesh, Greatstaff of the Guardian', 'Intellect', 72, 'melee'),
+    'mace': Item('Sulfuras, Hand of Ragnaros', 'Fire resistance', 15, 'melee'),
+    'axe': Item('Shadowmourne', 'Strength', 24, 'melee'),
+    'bow': Item("Thori'dal, the Stars' Fury", 'Agility', 19, 'ranged'),
+    'wand': Item('Crimson Shocker', 'Stamina', 10, 'ranged')
+}
+
+
 
 
 def get_help():
