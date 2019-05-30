@@ -51,10 +51,10 @@ def move_direction(where):
     elif where == 'e':
         dir_name = 'East'
 
-    print(f'\nYou start moving {dir_name}')
+    print(f'\nYou start walking {dir_name}')
     for i in [1, 2, 3]:
+        print('...walking')
         time.sleep(0.3)
-        print('...' * i)
 
 
 #
@@ -87,12 +87,11 @@ while directions != 'q':
     directions = input(
         'What is your next move? ').lower()
     try:
-
         if directions == 'n':
             if new_player.current_room.n_to:
                 new_player.current_room = new_player.current_room.n_to
-                # print('\n===== You start moving north =====')
-                #                directions == ''
+                move_direction(directions)
+                directions == ''
             else:
                 print('There is nothing here, try another direction.')
         elif directions == 's':
