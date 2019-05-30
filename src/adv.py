@@ -2,11 +2,12 @@ from room import Room
 from player import Player
 from items import Item
 import time
+import random
 
 # Declare all the rooms
 
 room = {
-    'outside':  Room("Outside Cave Entrance",
+    'outside':  Room("Cave Entrance",
                      "North of you, the cave mount beckons"),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
@@ -39,8 +40,8 @@ room['treasure'].s_to = room['narrow']
 # Create items
 
 items = {
-    'sword': Item('Thunderfury, Blessed Blade of the Windseeker', 'Damage', 52, 'melee'),
-    'staff': Item('Atiesh, Greatstaff of the Guardian', 'Intellect', 72, 'melee'),
+    'sword': Item('Thunderfury, Blessed Blade of the Windseeker', 'Damage', 30, 'melee'),
+    'staff': Item('Atiesh, Greatstaff of the Guardian', 'Intellect', 34, 'melee'),
     'mace': Item('Sulfuras, Hand of Ragnaros', 'Fire resistance', 15, 'melee'),
     'axe': Item('Shadowmourne', 'Strength', 24, 'melee'),
     'bow': Item("Thori'dal, the Stars' Fury", 'Agility', 19, 'ranged'),
@@ -48,6 +49,40 @@ items = {
 }
 
 
+def add_item_to_room(room):
+    success = False
+    rand_generator = random.randint(1, 10)
+    # give 30% chance for a item drop when entering a room
+    if rand_generator < 8:
+        # add a random item from items dict to the room
+        item_in_room = items[random.choice(list(items))]
+        room.items = item_in_room
+        print('*****************************************')
+        print(f'You found: \n{item_in_room.name} in the {room.name}')
+        print(item_in_room)
+        print('*****************************************')
+        success = True
+    else:
+        success = False
+    return success
+
+
+def get_item(item, player):
+    item_slot = item.slot
+    success = False
+    # check if player already has an item in this slot
+    if player.items[item_slot]:
+        print('\nYou already have an item in this slot. You must drop it before picking up another item.\n')
+        success = False
+    else:
+        player.items[item_slot] = item
+        success = True
+    return success
+
+
+def drop_item(item_slot, player):
+    print(f'\nYou have droped {player.items[item_slot].name}')
+    player.items[item_slot] = None
 
 
 def get_help():
@@ -71,21 +106,8 @@ def move_direction(where):
         time.sleep(0.3)
 
 
-#
-# Main
-#
 # Make a new player object that is currently in the 'outside' room.
 new_player = Player('Joe', room['outside'])
-# Write a loop that:
-#
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
 
 # initial location
 directions = ''
@@ -97,6 +119,39 @@ print('\n LET THE ADVENTURE BEGIN! \n')
 while directions != 'q':
     print(f'\nYou move to {new_player.current_room.name}')
     print(new_player.current_room.description + '\n')
+
+    result = add_item_to_room(new_player.current_room)
+    # Ask if player wants to pick up newly found item
+    if result:
+        pick_up = input('Would you like to pick it up [y/n]? ').lower()
+        # Check if he has an empty slot
+        if pick_up == 'y':
+            get_result = get_item(new_player.current_room.items, new_player)
+
+            if not get_result:
+                wanna_drop_item = input(
+                    f'Do you want to drop it [y/n]? ').lower()
+
+                if wanna_drop_item == 'y':
+                    # drop current item in a slot
+                    drop_item(new_player.current_room.items.slot, new_player)
+                    # and add new item to that slot
+                    get_item(new_player.current_room.items, new_player)
+                    print(
+                        f"\nYou've picked up {new_player.current_room.items.name}")
+                elif wanna_drop_item == 'n':
+                    print('You kept your current item')
+                else:
+                    print(
+                        'Oh no, you accidentaly destroyed the item by giving bad input :(')
+            else:
+                print(
+                    f"\nYou've picked up {new_player.current_room.items.name}")
+        elif pick_up == 'n':
+            continue
+        else:
+            print(
+                '\nOh no, you accidentaly destroyed the item by giving bad input :(\n')
 
     directions = input(
         'What is your next move? ').lower()
